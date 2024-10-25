@@ -1,9 +1,20 @@
 import java.util.*;
 
+// Jeffrey Tso
+// 10/16/2024
+// CSE 123
+// Creative Project 1: Abstract Strategy Games
+// Sean Eglip
+
+// This class extends the abstract class AbstractStrategyGame
+// to simulate a game of Connect Four.
+
 public class ConnectFour extends AbstractStrategyGame{
     private char[][] board;
     private boolean isPlayerOneTurn;
 
+    // This constructor initializes the board with a 7x6 2D char array that contains '-' to 
+    // represent the empty spaces. It also initializes the game with player one going first.
     public ConnectFour () {
         board = new char[][] {{'-', '-', '-', '-', '-', '-', '-'}, 
                               {'-', '-', '-', '-', '-', '-', '-'},
@@ -14,6 +25,7 @@ public class ConnectFour extends AbstractStrategyGame{
         isPlayerOneTurn = true;
     }
 
+    // Returns a String of instructions on how to play the game.
     public String instructions() {
         String result = "";
         result += "Two players takes turns placing tokens of their color into 1 of 7 columns.\n";
@@ -27,6 +39,10 @@ public class ConnectFour extends AbstractStrategyGame{
         return result;
     }
 
+    // Behavior:
+    //      - Gets the winner (if any) at any certain state of the game.
+    // Return:
+    //      - Returns 1 if player one won, 2 if player two won, or -1 if the game isn't over yet.
     public int getWinner() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -43,6 +59,12 @@ public class ConnectFour extends AbstractStrategyGame{
         return -1;
     }
 
+    // Behavior:
+    //      - Private helper method to check around a certain token for connect fours.
+    // Return:
+    //      - Returns true if there is a connect four for the given token, false if not.
+    // Parameters:
+    //      - Takes in an x and y int to mark the current token's board position.
     private boolean checkToken(int x, int y) {
         char currentToken = board[y][x];
 
@@ -180,6 +202,10 @@ public class ConnectFour extends AbstractStrategyGame{
         return false;
     }
 
+    // Behavior:
+    //      - Gets the next player's turn.
+    // Return:
+    //      - Returns 1 if its player one's turn, 2 if player two, and -1 if the game is over.
     public int getNextPlayer() {
         if (isGameOver()) {
             return -1;
@@ -187,6 +213,17 @@ public class ConnectFour extends AbstractStrategyGame{
         return isPlayerOneTurn ? 1 : 2;
     }
 
+    // Behavior:
+    //      - Makes a move on the board given a column input. Adds a token of the
+    //      - current player's color in the bottommost empty row of the column. If the column is
+    //      - full and the very bottom row contains a token of their color, the bottom token is 
+    //      - removed instead.
+    // Exceptions:
+    //      - Throws an IllegalArgumentException if the column input is any of the following:
+    //      - not between 1 and 7, is a non-integer, or the column is full AND the
+    //      - bottom row token is not of their color.
+    // Parameter:
+    //      - Takes in a scanner to read the players column input.
     public void makeMove(Scanner input) {
         char currentPlayerColor;
         if (isPlayerOneTurn) {
@@ -195,6 +232,10 @@ public class ConnectFour extends AbstractStrategyGame{
             currentPlayerColor = 'B';
         }
         System.out.print("Column: ");
+        if (!input.hasNextInt()) {
+            input.next();
+            throw new IllegalArgumentException("Please enter a single integer.");
+        }
         int columnIndex = input.nextInt() - 1;
         if (columnIndex < 0 || columnIndex > 6) {
             throw new IllegalArgumentException("Please enter a number between 1-7.");
@@ -222,6 +263,9 @@ public class ConnectFour extends AbstractStrategyGame{
 
     }
 
+    // Returns a string representation of the current board's state. The string consists of
+    // a 7x6 2D char array where '-' represents empty spaces, 'W' represents
+    // player one's tokens, and 'B' represents player two's tokens.
     public String toString() {
         String result = "";
         for (int i = 0; i < board.length; i++) {
