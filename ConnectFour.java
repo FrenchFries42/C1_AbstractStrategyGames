@@ -13,8 +13,7 @@ public class ConnectFour extends AbstractStrategyGame{
     private char[][] board;
     private boolean isPlayerOneTurn;
 
-    // This constructor initializes the board with a 7x6 2D char array that contains '-' to 
-    // represent the empty spaces. It also initializes the game with player one going first.
+    // This constructor initializes the board and game with player one going first.
     public ConnectFour () {
         board = new char[][] {{'-', '-', '-', '-', '-', '-', '-'}, 
                               {'-', '-', '-', '-', '-', '-', '-'},
@@ -223,18 +222,18 @@ public class ConnectFour extends AbstractStrategyGame{
     //      - not between 1 and 7, is a non-integer, or the column is full AND the
     //      - bottom row token is not of their color.
     // Parameter:
-    //      - Takes in a scanner to read the players column input.
+    //      - Takes in a scanner to read the players column input. The scanner should be non-null.
     public void makeMove(Scanner input) {
+        System.out.print("Column: ");
+        if (!input.hasNextInt()) {
+            input.next();
+            throw new IllegalArgumentException("Please enter a single integer.");
+        }
         char currentPlayerColor;
         if (isPlayerOneTurn) {
             currentPlayerColor = 'W';
         } else {
             currentPlayerColor = 'B';
-        }
-        System.out.print("Column: ");
-        if (!input.hasNextInt()) {
-            input.next();
-            throw new IllegalArgumentException("Please enter a single integer.");
         }
         int columnIndex = input.nextInt() - 1;
         if (columnIndex < 0 || columnIndex > 6) {
@@ -244,7 +243,6 @@ public class ConnectFour extends AbstractStrategyGame{
             throw new IllegalArgumentException("Cannot choose this column. " + 
                                                     "Please select another column.");
         }
-
         if (board[0][columnIndex] != '-') {
             for (int i = 5; i > 0; i--) {
                 board[i][columnIndex] = board[i-1][columnIndex];
@@ -263,9 +261,7 @@ public class ConnectFour extends AbstractStrategyGame{
 
     }
 
-    // Returns a string representation of the current board's state. The string consists of
-    // a 7x6 2D char array where '-' represents empty spaces, 'W' represents
-    // player one's tokens, and 'B' represents player two's tokens.
+    // Returns a string representation of the current board's state.
     public String toString() {
         String result = "";
         for (int i = 0; i < board.length; i++) {
